@@ -1,0 +1,3 @@
+/home/simone/CLionProjects/HWC1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/simone/CLionProjects/HWC1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/simone/CLionProjects/HWC1/cmake-build-debug/CMakeFiles/HWC1.dir

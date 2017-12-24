@@ -1,0 +1,29 @@
+Implementazione delle funzioni get e put per permettere le operazioni di inserimento ed eliminazione dal buffer:
+
+versione bloccante:
+	get e put molto simili alla versione dello pseudocodice delle slide
+
+versione non bloccante:
+	get e post: 
+		-si fa una sem_trywait così che nel caso in cui non vada a buon fine si abbia questa proprietà della non bloccabilità e quindi 
+		ritornare BUFFER_ERROR
+
+in entrambe le versioni (bloccante e non) la circolarità del buffer viene garantita da un aggiornamento dell'indice tramite modulo, da notare che è stato optato l'aggiornamento all'interno delle parentesi dell'array (implementazione 1), questo comporta che l'indice va sempre avanti, invece che l'implementazione 2, la quale prevede una versione dell'indice da 0 ad n-1; in questo caso si avrebbe una difficoltà nell'utilizzare gli indici di estrazione ed inserimento all'interno di condizioni,  del ciclo poichè effettivamente ad n non vi si arriverebbe mai (ex: buffer pieno => if(buffer->insertion_index - buffer->extract_index) == buffer->maxsize))
+NB: a livello di hw non cambia nulla l'utilizzo dell'una o dell'altra.
+
+implementazione 1:
+messaggio = buffer->content[buffer->extract_index % buffer->maxsize];
+buffer->extract_index = buffer->extract_index + 1;
+
+impementazione 2:
+messaggio = buffer->content[buffer->extract_index];
+buffer->extract_index = (buffer->extract_index + 1) % buffer->maxsize;
+
+Test:
+	-mano a mano che la complessità ed il numero dei test aumentava, si è cercato di fare funzioni "UTILS" generiche (quando possibile) 
+	come ad esempio many_consumers() e many_producers() per avere n thread(con n personalizzabile) che sottomettono un task; sono 
+	invocabili come thread task e gli viene passata una struct che rappresenta tutti i parametri dove all'interno viene specificata anche 
+	la funzione che poi i vari thread richiameranno.
+	-
+
+

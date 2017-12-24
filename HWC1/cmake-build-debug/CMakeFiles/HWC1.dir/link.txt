@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/HWC1.dir/main.c.o CMakeFiles/HWC1.dir/buffer.c.o CMakeFiles/HWC1.dir/buffer_test.c.o CMakeFiles/HWC1.dir/msg_string.c.o  -o HWC1 -lpthread -lcunit 
