@@ -1,6 +1,6 @@
 package model.adder;
 
-import model.unbounded.UnboundedBufferBinaryTreeAdder;
+import model.adder.unbounded.UnboundedBufferBinaryTreeAdder;
 import model.tree.structure.Node;
 import model.tree.utils.CreateBinaryTree;
 import org.junit.Before;

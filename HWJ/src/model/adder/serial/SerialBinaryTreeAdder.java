@@ -1,6 +1,6 @@
-package model.serial;
+package model.adder.serial;
 
-import model.BinaryTreeAdder;
+import model.adder.BinaryTreeAdder;
 import model.processor.FakeProcessor;
 import model.tree.structure.Node;
 

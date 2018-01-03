@@ -1,4 +1,4 @@
-package model.bounded;
+package model.adder.bounded;
 
 import model.processor.FakeProcessor;
 import model.tree.structure.Node;
@@ -61,7 +61,7 @@ public class BoundedBufferAdderTask implements Callable<Integer> {
         //inserisco il buffer del thread corrente nella lista dei buffer
         this.tasksQueue.add(this.currentNode);
 
-        
+
 
         return null;
     }

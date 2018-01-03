@@ -1,5 +1,6 @@
-package model.adder;
+package model.adder.unbounded;
 
+import model.adder.BinaryTreeAdder;
 import model.tree.structure.Node;
 
 import java.util.Deque;
@@ -11,7 +12,7 @@ import java.util.concurrent.*;
  problema, ciascuno restituisce un valore di tipo Result
  i Solver cercano la soluzione concorrentemente
  Si usano in particolare i “CompletionService”
- 
+ (CompletionService è un interfaccia)
  CompletionService >> ExecutorCompletionService >>
  Oltre a
  
@@ -57,7 +58,6 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
         this.flowSybchronizer = new CyclicBarrier(NCPU);
         /*bloccante & illimitata*/
         this.illimitateNodeBuffer = new LinkedBlockingDeque<>();
-
     }
 
     /*essenzialmente un mix tra primo esempio e secondo di pc-18 */
@@ -70,7 +70,7 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
             /*Future<V> submit(Callable<V> task) non mi salvo i feature in una lista semplicemente
             * perchè tutto è finito quando tutti i future hanno ottenuto i dati quindi non lascio
             * nessuno in esecuzione*/
-            this.ecs.submit(new UnboundedBufferSumTask(flowSybchronizer,illimitateNodeBuffer));
+        this.ecs.submit(new UnboundedBufferSumTask(flowSybchronizer,illimitateNodeBuffer));
 
         int somma = 0;
         /*somma dei risultati dei vari solvers*/
@@ -90,7 +90,6 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
             }
         }
 
-        System.out.println("la somma è: " + somma);
         /*di ExecutorService, shutdown dei task eseguiti e nessun nuovo task è accettato*/
         pool.shutdown();
 
