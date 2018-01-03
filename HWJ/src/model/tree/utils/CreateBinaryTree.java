@@ -3,6 +3,8 @@ package model.tree.utils;
 import model.tree.structure.Node;
 import model.tree.structure.StructureTreeNode;
 
+import static sun.swing.MenuItemLayoutHelper.max;
+
 public class CreateBinaryTree {
 
     /**
@@ -41,5 +43,12 @@ public class CreateBinaryTree {
 
             return node;
         }
+    }
+
+    public int getHeight(Node root){
+        if(root == null)
+            return 0;
+
+        return 1 + max(getHeight(root.getDx()),getHeight(root.getSx()));
     }
 }
