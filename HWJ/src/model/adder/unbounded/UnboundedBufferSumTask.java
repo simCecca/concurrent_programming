@@ -33,20 +33,20 @@ public class UnboundedBufferSumTask implements Callable<Integer>{
 
         //poolFirst e non removeFirst perchè non vogliamo eccezioni
         currentNode = illimitateNodeBuffer.pollFirst();
-        boolean riSincronizza = false;
+        //boolean riSincronizza = false;
         try
         {
             if (currentNode != null) {
                 if (currentNode.getSx() != null) {
-                    riSincronizza = true;
+                    //riSincronizza = true;
                     illimitateNodeBuffer.add(currentNode.getSx());
                 }
                 if (currentNode.getDx() != null) {
-                    riSincronizza = true;
+                    //riSincronizza = true;
                     illimitateNodeBuffer.add(currentNode.getDx());
                 }
                 //per non rischiare che ci sia qualche thread dormiente
-                if (riSincronizza) this.flowSybchonizer.reset();
+                //if (riSincronizza) this.flowSybchonizer.reset();
                 return processor.onerousFunction(currentNode.getValue()) + call();
             } else {
                 //aspetto che tutti i flussi si sincronizzino qui
@@ -58,7 +58,7 @@ public class UnboundedBufferSumTask implements Callable<Integer>{
         }
         catch (BrokenBarrierException e)
         {
-            return 0;
+            System.out.println("BrokenBarrier in unbounded task");
         }
         return 0;
     }

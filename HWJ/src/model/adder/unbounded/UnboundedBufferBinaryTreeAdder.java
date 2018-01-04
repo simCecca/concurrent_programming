@@ -86,7 +86,7 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
             }
             catch (ExecutionException e)
             {
-                e.printStackTrace();
+                System.out.println("ExecutionException in UnboundedAdder");
             }
         }
 

@@ -65,7 +65,7 @@ public class BoundedBinaryTreeAdder implements BinaryTreeAdder{
         this.NCPU = Runtime.getRuntime().availableProcessors();
         /*solito pool di thread di dimensioni NCPU*/
         this.pool = Executors.newFixedThreadPool(this.NCPU);
-        this.ecs = new ExecutorCompletionService<Integer>(pool);
+        this.ecs = new ExecutorCompletionService<>(pool);
 
         this.barrier = new CyclicBarrier(this.NCPU);
         this.limitateNodeBuffer = new LinkedBlockingDeque<>();
@@ -91,11 +91,10 @@ public class BoundedBinaryTreeAdder implements BinaryTreeAdder{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
-                e.printStackTrace();
+                return 0;
             }
         }
-
         this.pool.shutdown();
-        return 0;
+        return somma;
     }
 }
