@@ -60,6 +60,7 @@ public class BoundedBufferAdderTask implements Callable<Integer> {
      * @return la somma di tutti i nodi che riesce a sommare prima della fine della struttura
      */
     private int somma(Node current){
+
         /*se non ho finito i miei task interni al mio buffer this.currentBufferNode, allora
          * non rubo*/
         try
@@ -78,15 +79,26 @@ public class BoundedBufferAdderTask implements Callable<Integer> {
                     this.currentBufferNode.addLast(sx);
                 }
                 //if(reset) barrier.reset();
+
                 return currentValue + somma(this.currentBufferNode.pollLast());
             }
             else {
-                /*quando ho finito i miei task, devo rubare da altri*/
-                boolean rubato = this.ruba();
-                if (rubato) {
-                   return somma(this.nodoRubato);
+
+                /*se è false, allora potrebbe essere possibile che ancora il primo Thread non abbia
+                ancora splittato i nodi nel suo buffer, quindi in questo caso non è vero che ha
+                terminato anche il primo thread tutti i lavori ma solamente ancora non li ha messi
+                nel buffer allora così facendo se un thread ritorna da rubato false, si blocca sull'await
+                e si ha un tempo come se fosse seriale*/
+                //se questa condizione è vera, allora non è l'ultimo nodo dell'albero
+                if(barrier.getParties() - barrier.getNumberWaiting() != 1)
+                {/*quando ho finito i miei task, devo rubare da altri*/
+                    boolean rubato = this.ruba();
+                    if (rubato) {
+                        return somma(this.nodoRubato);
+                    }
                 }
                 //fine dei giochi
+
                 barrier.await();
             }
         } catch (InterruptedException e) {

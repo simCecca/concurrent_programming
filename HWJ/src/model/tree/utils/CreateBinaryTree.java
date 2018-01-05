@@ -1,48 +1,23 @@
 package model.tree.utils;
 
 import model.tree.structure.Node;
-import model.tree.structure.StructureTreeNode;
 
 import static sun.swing.MenuItemLayoutHelper.max;
 
-public class CreateBinaryTree {
+
+public abstract class CreateBinaryTree {
+
+    public abstract Node treeCreate(int altezza);
 
     /**
-     * crea un albero binario di altezza altezza
-     * @param altezza = altezza dell'albero binario
-     * @return la radice dell'albero
+     *
+     * @param root: radice dell'albero (o sottoalbero)
+     * @return numero di nodi nell'albero
      */
-    public Node treeCreate(int altezza){
-        if(altezza == 0)
-            return null;
-        else
-            {
-                StructureTreeNode node = new StructureTreeNode();
-                node.setValue(altezza);
-
-                node.setDx(treeCreate(altezza-1));
-                node.setSx(treeCreate(altezza-1));
-
-                return node;
-            }
-    }
-
-
-    public Node unbalancedTreeCreate(int altezza){
-        if(altezza == 0)
-            return null;
-        else
-        {
-            StructureTreeNode node = new StructureTreeNode();
-            node.setValue(altezza);
-
-            node.setDx(unbalancedTreeCreate(altezza-1));
-            if(altezza < 3)
-                node.setSx(unbalancedTreeCreate(0));
-            else node.setSx(unbalancedTreeCreate(altezza-1));
-
-            return node;
-        }
+    public int getNodeNumber(Node root){
+        if(root == null)
+            return 0;
+        return 1 + getNodeNumber(root.getDx()) + getNodeNumber(root.getSx());
     }
 
     public int getHeight(Node root){

@@ -47,9 +47,11 @@ public class UnboundedBufferSumTask implements Callable<Integer>{
                 }
                 //per non rischiare che ci sia qualche thread dormiente
                 //if (riSincronizza) this.flowSybchonizer.reset();
+                //System.out.println("somma : " + Thread.currentThread().getName());
                 return processor.onerousFunction(currentNode.getValue()) + call();
             } else {
                 //aspetto che tutti i flussi si sincronizzino qui
+               // System.out.println(" await " + Thread.currentThread().getName());
                 this.flowSybchonizer.await();
             }
         }catch (InterruptedException e)

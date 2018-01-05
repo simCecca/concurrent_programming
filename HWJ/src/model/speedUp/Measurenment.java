@@ -4,7 +4,7 @@ import model.adder.bounded.BoundedBinaryTreeAdder;
 import model.adder.serial.SerialBinaryTreeAdder;
 import model.adder.unbounded.UnboundedBufferBinaryTreeAdder;
 import model.tree.structure.Node;
-import model.tree.utils.CreateBinaryTree;
+import model.tree.utils.CreateBinaryTreeBalanced;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class Measurenment {
     private List<Long> serialResult = new LinkedList<>();
     private Node node = null;
 
-    private CreateBinaryTree tree = new CreateBinaryTree();
+    private CreateBinaryTreeBalanced tree = new CreateBinaryTreeBalanced();
     private UnboundedBufferBinaryTreeAdder unboundAdder;
     private BoundedBinaryTreeAdder boundedAdder;
     private SerialBinaryTreeAdder serialAdder = new SerialBinaryTreeAdder();
@@ -54,7 +54,7 @@ public class Measurenment {
         System.out.println("l'obiettivo è quello di misurare il comportamento asintotico delle varie" +
                 "implementazioni, i tempi sono riportati in secondi; \n" +
                 "dopo una prima fase di warm-up; in particolare si parte da un altezza di 1 \n" +
-                "fino ad arrivare a 12 quindi 4095 nodi (NB: per come vengono assegnati i valori ai nodi, 15 (32767 nodi) è l'altezza massima dopo la quale si ha StackOverflow)");
+                "fino ad arrivare a 12 quindi 4095 nodi (NB: per come vengono assegnati i valori ai nodi, 13 è l'altezza massima dopo la quale si ha StackOverflow)");
         System.out.println("| TREE HEIGHT |  | UNBOUNDED BUFFER |   | BOUNDED BUFFER |    | SERIAL |  ");
         for(int i = 0; i<time ; i++) {
             System.out.println("            " + (i+1) + "                " + (this.unboundedBufferResult.get(i)/1000.0) +
@@ -100,5 +100,8 @@ public class Measurenment {
     public static void main(String[] args) throws InterruptedException {
         Measurenment misura = new Measurenment();
         misura.misura();
+        misura.misura();
+        //andamento solo con 12, ogni tanto bounded è seriale
+
     }
 }

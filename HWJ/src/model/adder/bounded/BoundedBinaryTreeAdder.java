@@ -2,7 +2,7 @@ package model.adder.bounded;
 
 import model.adder.BinaryTreeAdder;
 import model.tree.structure.Node;
-import model.tree.utils.CreateBinaryTree;
+import model.tree.utils.CreateBinaryTreeBalanced;
 
 import java.util.Deque;
 import java.util.concurrent.*;
@@ -56,7 +56,7 @@ public class BoundedBinaryTreeAdder implements BinaryTreeAdder{
     private LinkedBlockingDeque<Node> limitateNodeBuffer;
 
     /*per la suddivisione dei buffer interni a taskDeque*/
-    private CreateBinaryTree tree;
+    private CreateBinaryTreeBalanced tree;
 
 
 
@@ -71,7 +71,7 @@ public class BoundedBinaryTreeAdder implements BinaryTreeAdder{
         this.limitateNodeBuffer = new LinkedBlockingDeque<>();
         this.tasksDeque = new LinkedBlockingDeque<>();
 
-        this.tree = new CreateBinaryTree();
+        this.tree = new CreateBinaryTreeBalanced();
     }
 
     @Override
@@ -83,18 +83,18 @@ public class BoundedBinaryTreeAdder implements BinaryTreeAdder{
             this.ecs.submit(new BoundedBufferAdderTask(barrier,limitateNodeBuffer,height,tasksDeque));
 
         int somma = 0;
+        try {
+        for(int i = 0; i<this.NCPU ; i++)
 
-        for(int i = 0; i<this.NCPU ; i++) {
-            try {
                 somma += this.ecs.take().get();
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
-                return 0;
-            }
-        }
-        this.pool.shutdown();
+                e.printStackTrace();
+
+            }finally {this.pool.shutdown();}
+
         return somma;
     }
 }

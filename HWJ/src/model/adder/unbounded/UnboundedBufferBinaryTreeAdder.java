@@ -74,25 +74,24 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
 
         int somma = 0;
         /*somma dei risultati dei vari solvers*/
-        for(int i = 0; i<this.NCPU ; i++) {
-            try
-            {/*try e catch per take()*/
+        try {for(int i = 0; i<this.NCPU ; i++)
+            /*try e catch per take()*/
                 somma += this.ecs.take().get();
                 /*se vi è una condizione di terminazione in base al risultato ottenuto va messa qui*/
-            }
+
+        }
             catch (InterruptedException e)
             {
                 e.printStackTrace();
             }
             catch (ExecutionException e)
             {
-                System.out.println("ExecutionException in UnboundedAdder");
+                e.printStackTrace();
             }
+            finally {
+            /*di ExecutorService, shutdown dei task eseguiti e nessun nuovo task è accettato*/
+            pool.shutdown();
         }
-
-        /*di ExecutorService, shutdown dei task eseguiti e nessun nuovo task è accettato*/
-        pool.shutdown();
-
         return somma;
     }
 }
