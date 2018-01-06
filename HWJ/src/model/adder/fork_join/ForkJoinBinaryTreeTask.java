@@ -23,7 +23,7 @@ public class ForkJoinBinaryTreeTask extends RecursiveTask<Integer> {
 
     private Node currentNode;
     /*soglia sotto la quale si procede serialmente, da varie misurazioni viene fuori che è migliore
-      fino ad un altezza in un intorno ai (5 - 6 - 7) => nodi(32 - 64 - 128)*/
+      fino ad un altezza in un intorno ai (5 - 6 - 7) => nodi(31 - 63 - 127)*/
     private int SEQUENTIAL_THRESHOLD = 64;
 
     private int nodiMancanti; //a spanne
@@ -37,20 +37,20 @@ public class ForkJoinBinaryTreeTask extends RecursiveTask<Integer> {
         * durante il calcolo, altrimenti si dovrebbe calcolare dinamicamente, ma visto che la documentazione
         * dice che si può sbagliare anche di molto, allora va bene anche una granularità meno fine*/
         this.nodiMancanti = nodiMancanti;
-
         this.processor = new FakeProcessor(1000);
     }
 
+    /*l'aggiornamento dei nodi mancanti è nodiMancanti-1 poichè devo togliere il nodo corrente / 2
+    * poichè verrà splittato il lavoro in 2 flussi distinti*/
     @Override
     protected Integer compute() {
-
         if(this.nodiMancanti < this.SEQUENTIAL_THRESHOLD)
             return this.sommaSeriale(this.currentNode);
 
         else{
             int currentValue = this.processor.onerousFunction(this.currentNode.getValue());
             //decomposizione in sotto-task
-            this.nodiMancanti--;
+            this.nodiMancanti = (this.nodiMancanti-1)/2;
             ForkJoinBinaryTreeTask left = new ForkJoinBinaryTreeTask(this.currentNode.getSx(),this.nodiMancanti);
             ForkJoinBinaryTreeTask rigth = new ForkJoinBinaryTreeTask(this.currentNode.getDx(),this.nodiMancanti);
 

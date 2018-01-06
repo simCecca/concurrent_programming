@@ -77,7 +77,6 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
         try {for(int i = 0; i<this.NCPU ; i++)
             /*try e catch per take()*/
                 somma += this.ecs.take().get();
-                /*se vi è una condizione di terminazione in base al risultato ottenuto va messa qui*/
 
         }
             catch (InterruptedException e)

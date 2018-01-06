@@ -1,6 +1,7 @@
 package model.speedUp;
 
 import model.adder.bounded.BoundedBinaryTreeAdder;
+import model.adder.fork_join.ForkJoinBinaryTreeAdder;
 import model.adder.serial.SerialBinaryTreeAdder;
 import model.adder.unbounded.UnboundedBufferBinaryTreeAdder;
 import model.tree.structure.Node;
@@ -16,17 +17,19 @@ public class Measurenment {
     private List<Long> unboundedBufferResult = new LinkedList<>();
     private List<Long> boundedBufferResult = new LinkedList<>();
     private List<Long> serialResult = new LinkedList<>();
+    private List<Long> forkJoinResult = new LinkedList<>();
     private Node node = null;
 
     private CreateBinaryTreeBalanced tree = new CreateBinaryTreeBalanced();
     private UnboundedBufferBinaryTreeAdder unboundAdder;
     private BoundedBinaryTreeAdder boundedAdder;
+    private ForkJoinBinaryTreeAdder forkJoinAdder;
     private SerialBinaryTreeAdder serialAdder = new SerialBinaryTreeAdder();
 
 
     public void misura() {
         //warm up
-        iteration(15);
+        iteration(13);
         this.listClear();
         //real measurenment
         iteration(12);
@@ -40,6 +43,7 @@ public class Measurenment {
             this.unboundedIteration();
             this.boundedIterator();
             this.serialIterator();
+            this.forkJoinIterator();
         }
     }
 
@@ -47,6 +51,7 @@ public class Measurenment {
         this.serialResult.clear();
         this.boundedBufferResult.clear();
         this.unboundedBufferResult.clear();
+        this.forkJoinResult.clear();
     }
 
     private void visualizza(int time){
@@ -54,11 +59,12 @@ public class Measurenment {
         System.out.println("l'obiettivo è quello di misurare il comportamento asintotico delle varie" +
                 "implementazioni, i tempi sono riportati in secondi; \n" +
                 "dopo una prima fase di warm-up; in particolare si parte da un altezza di 1 \n" +
-                "fino ad arrivare a 12 quindi 4095 nodi (NB: per come vengono assegnati i valori ai nodi, 13 è l'altezza massima dopo la quale si ha StackOverflow)");
-        System.out.println("| TREE HEIGHT |  | UNBOUNDED BUFFER |   | BOUNDED BUFFER |    | SERIAL |  ");
+                "fino ad arrivare a 12");
+        System.out.println("| TREE HEIGHT |  | UNBOUNDED BUFFER |   | BOUNDED BUFFER |    | SERIAL |       | FORK JOIN |   ");
         for(int i = 0; i<time ; i++) {
             System.out.println("            " + (i+1) + "                " + (this.unboundedBufferResult.get(i)/1000.0) +
-            "              " + (this.boundedBufferResult.get(i)/1000.0) + "              " + (this.serialResult.get(i)/1000.0));
+            "              " + (this.boundedBufferResult.get(i)/1000.0) + "              " + (this.serialResult.get(i)/1000.0) +
+            "       " + (this.forkJoinResult.get(i)/1000.0));
         }
     }
 
@@ -93,6 +99,16 @@ public class Measurenment {
         serialAdder.computeOnerousSum(this.node);
         lastTime = System.currentTimeMillis();
         serialResult.add(lastTime - initTime);
+    }
+
+    private void forkJoinIterator(){
+        long initTime = 0;
+        long lastTime = 0;
+        this.forkJoinAdder = new ForkJoinBinaryTreeAdder();
+        initTime = System.currentTimeMillis();
+        forkJoinAdder.computeOnerousSum(this.node);
+        lastTime = System.currentTimeMillis();
+        forkJoinResult.add(lastTime - initTime);
     }
 
 

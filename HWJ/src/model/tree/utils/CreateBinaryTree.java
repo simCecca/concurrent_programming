@@ -26,4 +26,13 @@ public abstract class CreateBinaryTree {
 
         return 1 + max(getHeight(root.getDx()),getHeight(root.getSx()));
     }
+
+    public void treeView(Node node){
+        if(node == null) return;
+
+        System.out.print(" " + node.getValue() + " D ");
+        treeView(node.getDx());
+        System.out.print(" S ");
+        treeView(node.getSx());
+    }
 }

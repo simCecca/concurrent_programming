@@ -1,7 +1,7 @@
 package model.tree.utils;
 
 import model.tree.structure.Node;
-import model.tree.structure.StructureTreeNode;
+import model.tree.structure.BinaryTreeNode;
 
 public class CreateBinaryTreeUnbalanced extends CreateBinaryTree {
 
@@ -11,7 +11,7 @@ public class CreateBinaryTreeUnbalanced extends CreateBinaryTree {
             return null;
         else
         {
-            StructureTreeNode node = new StructureTreeNode();
+            BinaryTreeNode node = new BinaryTreeNode();
             node.setValue(altezza);
 
             node.setDx(treeCreate(altezza-1));

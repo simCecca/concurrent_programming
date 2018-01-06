@@ -1,7 +1,7 @@
 package model.tree.structure;
 
 /*definizione della struttura ad albero binario*/
-public class StructureTreeNode implements Node {
+public class BinaryTreeNode implements Node {
     private Node dx;
     private Node sx;
     private int value;
