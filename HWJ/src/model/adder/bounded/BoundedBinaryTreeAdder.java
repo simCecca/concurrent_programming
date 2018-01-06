@@ -2,6 +2,7 @@ package model.adder.bounded;
 
 import model.adder.BinaryTreeAdder;
 import model.tree.structure.Node;
+import model.tree.utils.BinaryTreeUtils;
 import model.tree.utils.CreateBinaryTreeBalanced;
 
 import java.util.Deque;
@@ -56,7 +57,7 @@ public class BoundedBinaryTreeAdder implements BinaryTreeAdder{
     private LinkedBlockingDeque<Node> limitateNodeBuffer;
 
     /*per la suddivisione dei buffer interni a taskDeque*/
-    private CreateBinaryTreeBalanced tree;
+    private BinaryTreeUtils tree;
 
 
 
@@ -71,16 +72,17 @@ public class BoundedBinaryTreeAdder implements BinaryTreeAdder{
         this.limitateNodeBuffer = new LinkedBlockingDeque<>();
         this.tasksDeque = new LinkedBlockingDeque<>();
 
-        this.tree = new CreateBinaryTreeBalanced();
+        this.tree = new BinaryTreeUtils();
     }
 
     @Override
     public int computeOnerousSum(Node root) {
         this.limitateNodeBuffer.add(root);
         int height = this.tree.getHeight(root);
+        this.tree.setFinishVisit(false);
 
         for(int i = 0; i<this.NCPU ; i++)
-            this.ecs.submit(new BoundedBufferAdderTask(barrier,limitateNodeBuffer,height,tasksDeque));
+            this.ecs.submit(new BoundedBufferAdderTask(barrier,limitateNodeBuffer,height,tasksDeque,this.tree));
 
         int somma = 0;
         try {
@@ -91,6 +93,7 @@ public class BoundedBinaryTreeAdder implements BinaryTreeAdder{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
+                System.out.println("ExecutionError bounded");
                 e.printStackTrace();
 
             }finally {this.pool.shutdown();}

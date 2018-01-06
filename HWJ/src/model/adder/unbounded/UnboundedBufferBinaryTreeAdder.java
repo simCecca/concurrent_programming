@@ -2,6 +2,7 @@ package model.adder.unbounded;
 
 import model.adder.BinaryTreeAdder;
 import model.tree.structure.Node;
+import model.tree.utils.BinaryTreeUtils;
 
 import java.util.Deque;
 import java.util.concurrent.*;
@@ -49,6 +50,9 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
      * in particolare è richiesta una coda illimitata ==> java.util.concurrent. LinkedBlockingQueue*/
     private Deque<Node> illimitateNodeBuffer;
 
+    //per la stopping condition dei task
+    private BinaryTreeUtils treeUtils;
+
 
     public UnboundedBufferBinaryTreeAdder(){
         this.NCPU = Runtime.getRuntime().availableProcessors();
@@ -58,6 +62,7 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
         this.flowSybchronizer = new CyclicBarrier(NCPU);
         /*bloccante & illimitata*/
         this.illimitateNodeBuffer = new LinkedBlockingDeque<>();
+        this.treeUtils = new BinaryTreeUtils();
     }
 
     /*essenzialmente un mix tra primo esempio e secondo di pc-18 */
@@ -65,12 +70,13 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
     public int computeOnerousSum(Node root) {
         /*inizializzo la coda sincronizzo e faccio partire i NCPU flussi (i solvers)*/
         this.illimitateNodeBuffer.add(root);
+        this.treeUtils.setFinishVisit(false);
         /*sottomissione dei task*/
         for(int i = 0; i<this.NCPU ; i++)
             /*Future<V> submit(Callable<V> task) non mi salvo i feature in una lista semplicemente
             * perchè tutto è finito quando tutti i future hanno ottenuto i dati quindi non lascio
             * nessuno in esecuzione*/
-        this.ecs.submit(new UnboundedBufferSumTask(flowSybchronizer,illimitateNodeBuffer));
+        this.ecs.submit(new UnboundedBufferSumTask(flowSybchronizer,illimitateNodeBuffer,this.treeUtils));
 
         int somma = 0;
         /*somma dei risultati dei vari solvers*/

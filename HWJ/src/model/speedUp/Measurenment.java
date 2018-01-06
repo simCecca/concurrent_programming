@@ -117,6 +117,10 @@ public class Measurenment {
         Measurenment misura = new Measurenment();
         misura.misura();
         misura.misura();
+        misura.misura();
+        misura.misura();
+        misura.misura();
+        misura.misura();
         //andamento solo con 12, ogni tanto bounded è seriale
 
     }

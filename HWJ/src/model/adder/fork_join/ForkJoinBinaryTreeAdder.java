@@ -2,6 +2,7 @@ package model.adder.fork_join;
 
 import model.adder.BinaryTreeAdder;
 import model.tree.structure.Node;
+import model.tree.utils.BinaryTreeUtils;
 import model.tree.utils.CreateBinaryTreeBalanced;
 
 import java.util.concurrent.ForkJoinPool;
@@ -32,7 +33,7 @@ public class ForkJoinBinaryTreeAdder implements BinaryTreeAdder{
       int somma = 0;
       try {
 
-         int numeroNodi = new CreateBinaryTreeBalanced().getNodeNumber(root);
+         int numeroNodi = new BinaryTreeUtils().getNodeNumber(root);
          int nodiMancanti = numeroNodi / Runtime.getRuntime().availableProcessors();
           /*l'invoke ritorna il risultato del task sottomesso*/
               somma += pool.invoke(new ForkJoinBinaryTreeTask(root,nodiMancanti));

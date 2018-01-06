@@ -2,6 +2,7 @@ package model.adder.bounded;
 
 import model.processor.FakeProcessor;
 import model.tree.structure.Node;
+import model.tree.utils.BinaryTreeUtils;
 
 import java.util.Deque;
 import java.util.concurrent.BrokenBarrierException;
@@ -27,7 +28,9 @@ public class BoundedBufferAdderTask implements Callable<Integer> {
     private Deque<Node> currentBufferNode;
     private Node nodoRubato;
 
-    public BoundedBufferAdderTask(CyclicBarrier barrier, LinkedBlockingDeque<Node> limitateNodeBuffer, int height, LinkedBlockingDeque<Deque<Node>> tasksQueue){
+    private BinaryTreeUtils treeUtils;
+
+    public BoundedBufferAdderTask(CyclicBarrier barrier, LinkedBlockingDeque<Node> limitateNodeBuffer, int height, LinkedBlockingDeque<Deque<Node>> tasksQueue, BinaryTreeUtils treeUtils){
         this.barrier = barrier;
         this.limitateNodeBuffer = limitateNodeBuffer;
         this. height = height;
@@ -36,6 +39,8 @@ public class BoundedBufferAdderTask implements Callable<Integer> {
 
         /*sto limitando il buffer facendolo di dimensione D per ogni Thread ==> O(n*d)*/
         this.currentBufferNode = new LinkedBlockingDeque<>(this.height);
+
+        this.treeUtils = treeUtils;
     }
 
     @Override
@@ -44,10 +49,17 @@ public class BoundedBufferAdderTask implements Callable<Integer> {
         * è sicuro che solo un thread avrà la root e gli altri avranno null*/
         Node vittima = limitateNodeBuffer.poll();
 
+        //se sono stato il primo ad accedere al buffer comune
+        if(vittima != null) this.currentBufferNode.add(vittima);
+
         //inserisco il buffer del thread corrente nella lista dei buffer
         this.tasksQueue.add(this.currentBufferNode);
 
-        return this.somma(vittima);
+        Integer somma = 0;
+        while(!this.treeUtils.getFinishVisit())
+            somma += this.addCurrentNode();
+
+        return somma;
 
 
     }
@@ -55,56 +67,64 @@ public class BoundedBufferAdderTask implements Callable<Integer> {
     * in base a se sono stato il primo thread ad accedere al buffer limitateNodeBuffer comune a tutti
     * i thread*/
 
+    private int fromMyBuffer(Node current){
+        int currentValue = this.processor.onerousFunction(current.getValue());
+        Node dx = current.getDx();
+        Node sx = current.getSx();
+        if( dx != null)
+        {
+            this.currentBufferNode.addLast(dx);
+            barrier.reset();
+        }
+        if( sx != null)
+        { //se lo prendo invece di metterlo nel buffer sono sicuro che non rimango a secco
+            return currentValue + this.fromMyBuffer(sx);
+        }
+        //if(reset) barrier.reset();
+
+        return currentValue ;
+    }
     /**
      * sottomette tutti i task e se li finisce prova a rubarli a qualche altro thread
      * @return la somma di tutti i nodi che riesce a sommare prima della fine della struttura
      */
-    private int somma(Node current){
+    private int addCurrentNode(){
 
-        /*se non ho finito i miei task interni al mio buffer this.currentBufferNode, allora
-         * non rubo*/
         try
-        {
+        {  //con il mio buffer mi muovo in modalita FIFO
+            Node current = this.currentBufferNode.pollLast();
+            /*se non ho finito i miei task interni al mio buffer this.currentBufferNode, allora
+             * non rubo*/
             if(current != null)
             {
-                int currentValue = this.processor.onerousFunction(current.getValue());
-                Node dx = current.getDx();
-                Node sx = current.getSx();
-                if( dx != null)
-                {
-                    this.currentBufferNode.addLast(dx);
-                }
-                if( sx != null)
-                { //se lo prendo invece di metterlo nel buffer sono sicuro che non rimango a secco
-                    this.currentBufferNode.addLast(sx);
-                }
-                //if(reset) barrier.reset();
-
-                return currentValue + somma(this.currentBufferNode.pollLast());
+                return this.fromMyBuffer(current);
             }
             else {
 
+                /*quando ho finito i miei task, devo rubare da altri*/
+                boolean rubato = this.ruba();
+                if (rubato) {
+                    return this.fromMyBuffer(this.nodoRubato);
+                }
                 /*se è false, allora potrebbe essere possibile che ancora il primo Thread non abbia
                 ancora splittato i nodi nel suo buffer, quindi in questo caso non è vero che ha
                 terminato anche il primo thread tutti i lavori ma solamente ancora non li ha messi
                 nel buffer allora così facendo se un thread ritorna da rubato false, si blocca sull'await
                 e si ha un tempo come se fosse seriale*/
-                //se questa condizione è vera, allora non è l'ultimo nodo dell'albero
-                if(barrier.getParties() - barrier.getNumberWaiting() != 1)
-                {/*quando ho finito i miei task, devo rubare da altri*/
-                    boolean rubato = this.ruba();
-                    if (rubato) {
-                        return somma(this.nodoRubato);
-                    }
-                }
-                //fine dei giochi
+                //se questa condizione è vera, allora è l'ultimo nodo dell'albero
+                if(barrier.getParties() - barrier.getNumberWaiting() == 1)
+                    this.treeUtils.setFinishVisit(true);
 
+                //fine dei giochi
                 barrier.await();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (BrokenBarrierException e) {
-            System.out.println("bariera rotta");
+            /*l'utilizzo del reset fa si che la barriera sia resettata nell'evenienza incui volessimo riutilizzarla
+            * fa si che tutti e due i thread lavorino anche se uno può fermarsi subito sull'await perchè l'altro non
+            * ha ancora messo nulla sul suo buffer*/
+            return 0;
         }
         return 0;
     }

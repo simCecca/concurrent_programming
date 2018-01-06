@@ -16,6 +16,7 @@ public class UnboundedBufferBinaryTreeAdderTest {
 
     private Node nodeUnbalancedAltezza3;
     private Node nodeUnbalancedAltezza7;
+    private Node nodeUnbalancedAltezza15;
 
     private CreateBinaryTreeBalanced simpleBinary;
     private CreateBinaryTreeUnbalanced unbalanced;
@@ -32,6 +33,7 @@ public class UnboundedBufferBinaryTreeAdderTest {
         this.nodeAltezza13 = this.simpleBinary.treeCreate(13);
         this.nodeUnbalancedAltezza3 = this.unbalanced.treeCreate(3);
         this.nodeUnbalancedAltezza7 = this.unbalanced.treeCreate(7);
+        this.nodeUnbalancedAltezza15 = this.unbalanced.treeCreate(15);
 
         this.adder = new UnboundedBufferBinaryTreeAdder();
     }
@@ -70,4 +72,8 @@ public class UnboundedBufferBinaryTreeAdderTest {
         assertEquals(215,adder.computeOnerousSum(this.nodeUnbalancedAltezza7));
     }
 
+    @Test
+    public void testTreeUnbalancedAltezza15(){
+        assertEquals(57327,adder.computeOnerousSum(this.nodeUnbalancedAltezza15));
+    }
 }

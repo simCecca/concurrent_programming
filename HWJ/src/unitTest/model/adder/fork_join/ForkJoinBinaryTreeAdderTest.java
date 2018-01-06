@@ -45,8 +45,6 @@ public class ForkJoinBinaryTreeAdderTest {
      * fatto che con la Cyclicbarrier fino a che tutti non hanno finito, non mi muovo*/
     @Test
     public void testTreeAltezza1(){
-
-        assertEquals(1,this.simpleBinary.getNodeNumber(this.nodeAltezza1));
         assertEquals(1,adder.computeOnerousSum(this.nodeAltezza1));
     }
 

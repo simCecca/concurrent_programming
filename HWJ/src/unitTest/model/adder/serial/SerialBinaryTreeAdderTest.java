@@ -62,6 +62,4 @@ public class SerialBinaryTreeAdderTest {
     public void testTreeUnbalancedAltezza7(){
         assertEquals(215,adder.computeOnerousSum(this.nodeUnbalancedAltezza7));
     }
-
-
 }
