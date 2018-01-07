@@ -1,4 +1,4 @@
-package bounded;
+package model.adder.bounded;
 
 import model.processor.FakeProcessor;
 import model.tree.structure.Node;

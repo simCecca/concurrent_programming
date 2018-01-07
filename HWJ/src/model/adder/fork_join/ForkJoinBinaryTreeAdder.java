@@ -1,4 +1,4 @@
-package fork_join;
+package model.adder.fork_join;
 
 import model.adder.BinaryTreeAdder;
 import model.tree.structure.Node;

@@ -1,5 +1,6 @@
 package bounded;
 
+import model.adder.bounded.BoundedBinaryTreeAdder;
 import model.tree.structure.Node;
 import model.tree.utils.CreateBinaryTreeBalanced;
 import model.tree.utils.CreateBinaryTreeUnbalanced;

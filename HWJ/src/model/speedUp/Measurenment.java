@@ -1,7 +1,7 @@
 package model.speedUp;
 
-import bounded.BoundedBinaryTreeAdder;
-import fork_join.ForkJoinBinaryTreeAdder;
+import model.adder.bounded.BoundedBinaryTreeAdder;
+import model.adder.fork_join.ForkJoinBinaryTreeAdder;
 import serial.SerialBinaryTreeAdder;
 import model.adder.unbounded.UnboundedBufferBinaryTreeAdder;
 import model.tree.structure.Node;
