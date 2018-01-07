@@ -1,4 +1,4 @@
-package model.adder.fork_join;
+package fork_join;
 
 
 import model.processor.FakeProcessor;
@@ -24,7 +24,7 @@ public class ForkJoinBinaryTreeTask extends RecursiveTask<Integer> {
     private Node currentNode;
     /*soglia sotto la quale si procede serialmente, da varie misurazioni viene fuori che è migliore
       fino ad un altezza in un intorno ai (5 - 6 - 7) => nodi(31 - 63 - 127)*/
-    private int SEQUENTIAL_THRESHOLD = 64;
+    private int SEQUENTIAL_THRESHOLD = 65;
 
     private int nodiMancanti; //a spanne
 

@@ -1,8 +1,8 @@
 package model.speedUp;
 
-import model.adder.bounded.BoundedBinaryTreeAdder;
-import model.adder.fork_join.ForkJoinBinaryTreeAdder;
-import model.adder.serial.SerialBinaryTreeAdder;
+import bounded.BoundedBinaryTreeAdder;
+import fork_join.ForkJoinBinaryTreeAdder;
+import serial.SerialBinaryTreeAdder;
 import model.adder.unbounded.UnboundedBufferBinaryTreeAdder;
 import model.tree.structure.Node;
 import model.tree.utils.CreateBinaryTreeBalanced;
@@ -29,11 +29,11 @@ public class Measurenment {
 
     public void misura() {
         //warm up
-        iteration(13);
+        iteration(16);
         this.listClear();
         //real measurenment
-        iteration(12);
-        visualizza(12);
+        iteration(15);
+        visualizza(15);
     }
 
     private void iteration(int time) {
@@ -59,13 +59,20 @@ public class Measurenment {
         System.out.println("l'obiettivo è quello di misurare il comportamento asintotico delle varie" +
                 "implementazioni, i tempi sono riportati in secondi; \n" +
                 "dopo una prima fase di warm-up; in particolare si parte da un altezza di 1 \n" +
-                "fino ad arrivare a 12");
+                "fino ad arrivare a 15 (32677 nodi), nel file.txt sono riportati i risultati di una esecuzione" +
+                "con altezza 20 (1048575 nodi) eseguiti su di una macchina dual-core");
         System.out.println("| TREE HEIGHT |  | UNBOUNDED BUFFER |   | BOUNDED BUFFER |    | SERIAL |       | FORK JOIN |   ");
         for(int i = 0; i<time ; i++) {
             System.out.println("            " + (i+1) + "                " + (this.unboundedBufferResult.get(i)/1000.0) +
             "              " + (this.boundedBufferResult.get(i)/1000.0) + "              " + (this.serialResult.get(i)/1000.0) +
-            "       " + (this.forkJoinResult.get(i)/1000.0));
+            "               " + (this.forkJoinResult.get(i)/1000.0));
         }
+        double serialLastResult = this.serialResult.get(time-1)/1000.0;
+        double speedUnbounded = serialLastResult / (this.unboundedBufferResult.get(time-1)/1000.0);
+        double speedBounded = serialLastResult /(this.boundedBufferResult.get(time-1)/1000.0);
+        double speedForkJoin = serialLastResult / (this.forkJoinResult.get(time-1)/1000.0);
+        System.out.println("\nspeed-up ottenuti (su hight = " + time + ") : UNBOUNDED BUFFER  " + speedUnbounded +
+        "  BOUNDED BUFFER  " + speedBounded + "  FORK JOIN  " + speedForkJoin);
     }
 
     private void unboundedIteration(){
@@ -116,12 +123,5 @@ public class Measurenment {
     public static void main(String[] args) throws InterruptedException {
         Measurenment misura = new Measurenment();
         misura.misura();
-        misura.misura();
-        misura.misura();
-        misura.misura();
-        misura.misura();
-        misura.misura();
-        //andamento solo con 12, ogni tanto bounded è seriale
-
     }
 }

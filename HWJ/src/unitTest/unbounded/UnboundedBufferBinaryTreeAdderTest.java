@@ -1,5 +1,6 @@
-package model.adder.bounded;
+package unbounded;
 
+import model.adder.unbounded.UnboundedBufferBinaryTreeAdder;
 import model.tree.structure.Node;
 import model.tree.utils.CreateBinaryTreeBalanced;
 import model.tree.utils.CreateBinaryTreeUnbalanced;
@@ -8,8 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class BoundedBinaryTreeAdderTest {
-
+public class UnboundedBufferBinaryTreeAdderTest {
     private Node nodeAltezza1;
     private Node nodeAltezza7;
     private Node nodeAltezza10;
@@ -21,7 +21,7 @@ public class BoundedBinaryTreeAdderTest {
 
     private CreateBinaryTreeBalanced simpleBinary;
     private CreateBinaryTreeUnbalanced unbalanced;
-    private BoundedBinaryTreeAdder adder;
+    private UnboundedBufferBinaryTreeAdder adder;
 
     @Before
     public void init(){
@@ -36,12 +36,12 @@ public class BoundedBinaryTreeAdderTest {
         this.nodeUnbalancedAltezza7 = this.unbalanced.treeCreate(7);
         this.nodeUnbalancedAltezza15 = this.unbalanced.treeCreate(15);
 
-        this.adder = new BoundedBinaryTreeAdder();
+        this.adder = new UnboundedBufferBinaryTreeAdder();
     }
 
 
     /*se la somma è quella aspettata sono sicuro che il nodo non è stato visitato più volte
-     * la non proliferazione dei thread a seguito dell'invocazione del metodo è garantita dal
+    * la non proliferazione dei thread a seguito dell'invocazione del metodo è garantita dal
      * fatto che con la Cyclicbarrier fino a che tutti non hanno finito, non mi muovo*/
     @Test
     public void testTreeAltezza1(){
@@ -77,5 +77,4 @@ public class BoundedBinaryTreeAdderTest {
     public void testTreeUnbalancedAltezza15(){
         assertEquals(57327,adder.computeOnerousSum(this.nodeUnbalancedAltezza15));
     }
-
 }

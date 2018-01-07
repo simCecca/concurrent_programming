@@ -1,4 +1,4 @@
-package model.adder.serial;
+package serial;
 
 import model.adder.BinaryTreeAdder;
 import model.processor.FakeProcessor;

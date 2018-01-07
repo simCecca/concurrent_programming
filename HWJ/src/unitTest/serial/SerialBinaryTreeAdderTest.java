@@ -1,4 +1,4 @@
-package model.adder.serial;
+package serial;
 
 import model.tree.structure.Node;
 import model.tree.utils.CreateBinaryTreeBalanced;

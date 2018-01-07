@@ -9,9 +9,6 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CyclicBarrier;
 
-/**
- *
- */
 
 public class UnboundedBufferSumTask implements Callable<Integer>{
     private CyclicBarrier flowSybchonizer;

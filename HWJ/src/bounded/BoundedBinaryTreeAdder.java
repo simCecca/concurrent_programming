@@ -1,9 +1,8 @@
-package model.adder.bounded;
+package bounded;
 
 import model.adder.BinaryTreeAdder;
 import model.tree.structure.Node;
 import model.tree.utils.BinaryTreeUtils;
-import model.tree.utils.CreateBinaryTreeBalanced;
 
 import java.util.Deque;
 import java.util.concurrent.*;

@@ -65,7 +65,7 @@ public class UnboundedBufferBinaryTreeAdder implements BinaryTreeAdder {
         this.treeUtils = new BinaryTreeUtils();
     }
 
-    /*essenzialmente un mix tra primo esempio e secondo di pc-18 */
+
     @Override
     public int computeOnerousSum(Node root) {
         /*inizializzo la coda sincronizzo e faccio partire i NCPU flussi (i solvers)*/
